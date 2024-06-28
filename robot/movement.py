@@ -1,10 +1,10 @@
 from gpiozero import Motor, LED
 
 try:
-    right_ahead_wheel = Motor(23, 24)
-    right_rear_wheel = Motor(19, 26)
+    right_ahead_wheel = Motor(24, 23)
+    right_rear_wheel = Motor(26, 19)
 
-    left_ahead_wheel = Motor(17, 27)
+    left_ahead_wheel = Motor(27, 17)
     left_rear_wheel = Motor(5, 6)
 
     pwm0 = LED(21)
