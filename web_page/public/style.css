@@ -1,0 +1,56 @@
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-space-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+.padding-left15vw {
+  padding-left: 15vw;
+}
+
+.padding-right15vw {
+  padding-right: 15vw;
+}
+
+.margin-top {
+  margin-top: 0.8vh;
+}
+
+.margin-bottom {
+  margin-bottom: 0.8vh;
+}
+
+button {
+  border: none;
+  border-radius: 50%;
+  height: 20vw;
+  width: 20vw;
+  background-color: rgb(200, 200, 200);
+}
+
+.button-touched {
+  transform: scale(0.8);
+}
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
+}
