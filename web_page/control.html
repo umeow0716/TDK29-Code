@@ -14,6 +14,8 @@
         console.log(event)
       }
 
+      setInterval(keep_alive, 1000)
+
       function movement(ele, data) {
         ws.send(JSON.stringify({
           type: 'movement',
@@ -27,8 +29,18 @@
         navigator.vibrate(20);
       }
 
-      function touchend(ele) {
+      function movement_touchend(ele) {
+        ws.send(JSON.stringify({
+          type: 'movement',
+          data: 'stop'
+        }))
         ele.classList.remove("button-touched")
+      }
+
+      function keep_alive() {
+        ws.send(JSON.stringify({
+          type: 'ping'
+        }))
       }
     </script>
     <style>
@@ -93,7 +105,7 @@
   <body>
     <div class="flex-column">
       <span class="flex-row flex-center" name="row1">
-        <button ontouchstart='movement(this, "forward")' ontouchend="touchend(this)" ontouchcancel="touchend(this)">
+        <button ontouchstart='movement(this, "forward")' ontouchend="movement_touchend(this)" ontouchcancel="movement_touchend(this)">
           <span class="material-symbols-outlined">
             arrow_upward
           </span>
@@ -101,12 +113,12 @@
       </span>
       
       <span class="flex-row flex-space-between padding-left15vw padding-right15vw margin-top margin-bottom" name="row2">
-        <button ontouchstart='movement(this, "left")' ontouchend="touchend(this)" ontouchcancel="touchend(this)">
+        <button ontouchstart='movement(this, "left")' ontouchend="movement_touchend(this)" ontouchcancel="movement_touchend(this)">
           <span class="material-symbols-outlined">
             arrow_left_alt
           </span>
         </button>
-        <button ontouchstart='movement(this, "right")' ontouchend="touchend(this)" ontouchcancel="touchend(this)">
+        <button ontouchstart='movement(this, "right")' ontouchend="movement_touchend(this)" ontouchcancel="movement_touchend(this)">
           <span class="material-symbols-outlined">
             arrow_right_alt
           </span>
@@ -114,19 +126,9 @@
       </span>
       
       <span class="flex-row flex-center" name="row3">
-        <button ontouchstart='movement(this, "backward")' ontouchend="touchend(this)" ontouchcancel="touchend(this)">
+        <button ontouchstart='movement(this, "backward")' ontouchend="movement_touchend(this)" ontouchcancel="movement_touchend(this)">
           <span class="material-symbols-outlined">
             arrow_downward
-          </span>
-        </button>
-      </span>
-
-      <br />
-
-      <span class="flex-row flex-center" name="row4">
-        <button ontouchstart='movement(this, "stop")' ontouchend="touchend(this)" ontouchcancel="touchend(this)">
-          <span class="material-symbols-outlined">
-            dangerous
           </span>
         </button>
       </span>
