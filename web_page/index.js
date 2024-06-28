@@ -10,4 +10,6 @@ app.get('/', async (req, res) => {
   res.send(controlHtml)
 })
 
-app.listen(3000, '0.0.0.0')
+app.listen(3000, '0.0.0.0', () => {
+  console.log("webserver start!")
+})
