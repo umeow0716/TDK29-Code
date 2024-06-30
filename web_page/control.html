@@ -8,35 +8,37 @@
     <script src="script.js"></script>
   </head>
   <body>
-    <div class="flex-column">
-      <span class="flex-row flex-center" name="row1">
-        <button ontouchstart='movement(this, "forward")' ontouchend="movement_touchend(this)" ontouchcancel="movement_touchend(this)">
-          <span class="material-symbols-outlined">
-            arrow_upward
-          </span>
-        </button>
-      </span>
-      
-      <span class="flex-row flex-space-between padding-left15vw padding-right15vw margin-top margin-bottom" name="row2">
-        <button ontouchstart='movement(this, "left")' ontouchend="movement_touchend(this)" ontouchcancel="movement_touchend(this)">
-          <span class="material-symbols-outlined">
-            arrow_left_alt
-          </span>
-        </button>
-        <button ontouchstart='movement(this, "right")' ontouchend="movement_touchend(this)" ontouchcancel="movement_touchend(this)">
-          <span class="material-symbols-outlined">
-            arrow_right_alt
-          </span>
-        </button>
-      </span>
-      
-      <span class="flex-row flex-center" name="row3">
-        <button ontouchstart='movement(this, "backward")' ontouchend="movement_touchend(this)" ontouchcancel="movement_touchend(this)">
-          <span class="material-symbols-outlined">
-            arrow_downward
-          </span>
-        </button>
-      </span>
+    <div class="panel">
+      <div class="flex-column width100">
+        <span class="flex-row flex-center width100" name="row1">
+          <button ontouchstart='movement(this, event, "forward")' ontouchend="movement_touchend(this)" ontouchcancel="movement_touchend(this)">
+            <span class="material-symbols-outlined">
+              arrow_upward
+            </span>
+          </button>
+        </span>
+        
+        <span class="flex-row flex-space-between padding-left10vw padding-right10vw margin-top margin-bottom" name="row2">
+          <button ontouchstart='movement(this, event, "left")' ontouchend="movement_touchend(this)" ontouchcancel="movement_touchend(this)">
+            <span class="material-symbols-outlined">
+              arrow_left_alt
+            </span>
+          </button>
+          <button ontouchstart='movement(this, event, "right")' ontouchend="movement_touchend(this)" ontouchcancel="movement_touchend(this)">
+            <span class="material-symbols-outlined">
+              arrow_right_alt
+            </span>
+          </button>
+        </span>
+        
+        <span class="flex-row flex-center width100" name="row3">
+          <button ontouchstart='movement(this, event, "backward")' ontouchend="movement_touchend(this)" ontouchcancel="movement_touchend(this)">
+            <span class="material-symbols-outlined">
+              arrow_downward
+            </span>
+          </button>
+        </span>
+      </div>
     </div>
   </body>
 </html>

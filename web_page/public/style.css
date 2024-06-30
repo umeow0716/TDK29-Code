@@ -1,3 +1,24 @@
+body {
+  display: flex;
+  justify-content: center;
+  background-color: #161B30;
+  height: 98vh;
+  width: 98%;
+}
+
+.panel {
+  display: flex;
+  background-color: #222B43;
+  border-radius: 10px;
+  width: 100%;
+  padding-top: 3%;
+  margin: 20px;
+}
+
+.width100 {
+  width: 100%;
+}
+
 .flex-column {
   display: flex;
   flex-direction: column;
@@ -19,12 +40,12 @@
   justify-content: space-between;
 }
 
-.padding-left15vw {
-  padding-left: 15vw;
+.padding-left10vw {
+  padding-left: 10vw;
 }
 
-.padding-right15vw {
-  padding-right: 15vw;
+.padding-right10vw {
+  padding-right: 10vw;
 }
 
 .margin-top {
@@ -41,6 +62,11 @@ button {
   height: 20vw;
   width: 20vw;
   background-color: rgb(200, 200, 200);
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.4),0 17px 50px 0 rgba(0,0,0,0.2);
+  
+  user-select:none; /* standard syntax */
+  -webkit-user-select:none; /* for Chrome、Safari */
+  -moz-user-select:none;  /* for Mozilla、Firefox */
 }
 
 .button-touched {
@@ -53,4 +79,16 @@ button {
   'wght' 400,
   'GRAD' 0,
   'opsz' 24
+}
+
+
+.plus_one {  
+  animation-name: plus_one;
+  animation-duration: 1s;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes plus_one {
+  0% { transform: translate(0,  0px); opacity: 1; }
+  100%  { transform: translate(0, -30px); opacity: 0.2; }
 }
