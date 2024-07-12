@@ -5,7 +5,7 @@ let ws = new WebSocket(`ws://${ip}:8765`);
 
 let isTrust = false
 
-setInterval(keep_alive, 1000)
+setInterval(keep_alive, 10000)
 
 function movement(ele, event, data) {
   try {
@@ -25,6 +25,39 @@ function movement(ele, event, data) {
   audio.play()
   plusOne(event)
   window.navigator.vibrate(20)
+}
+
+function topMachine(ele, event, data) {
+  try {
+    ws.send(JSON.stringify({
+      type: 'top_machine',
+      data
+    }))
+  } catch(err) {
+    console.error(err)
+  }
+  ele?.classList?.add("button-touched")
+
+  if(!isTrust) return
+
+  const audio = document.createElement("audio")
+  audio.src = `${data}.mp3`
+  audio.play()
+  plusOne(event)
+  window.navigator.vibrate(20)
+}
+
+function topMachineTouchEnd(ele) {
+  try {
+    ws.send(JSON.stringify({
+      type: 'top_machine',
+      data: 'stop'
+    }))
+  } catch(err) {
+    console.error(err)
+  }
+  ele.classList.remove("button-touched")
+  isTrust = true
 }
 
 function arduinoTestHigh(ele, event, _data) {
