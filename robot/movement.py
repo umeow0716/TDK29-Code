@@ -4,8 +4,13 @@ try:
     right_ahead_wheel = Motor(24, 23)
     right_rear_wheel = Motor(26, 19)
 
-    left_ahead_wheel = Motor(27, 17)
+    left_ahead_wheel = Motor(22, 17)
     left_rear_wheel = Motor(5, 6)
+    
+    right_ahead_wheel.stop()
+    right_rear_wheel.stop()
+    left_ahead_wheel.stop()
+    left_rear_wheel.stop()
 
     pwm0 = LED(21)
     pwm1 = LED(20)

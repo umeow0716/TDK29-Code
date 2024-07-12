@@ -1,25 +1,25 @@
-from gpiozero import Motor, LED
+# from gpiozero import Motor, LED
 
-try:
-    top_motor = Motor(2, 3)
+# try:
+#     top_motor = Motor(2, 3)
 
-    top_motor_pwm = LED(4)
+#     top_motor_pwm = LED(4)
 
-except:
-    pass
+# except:
+#     pass
 
-class TopMachine:
-    @staticmethod
-    def execute(direction):
-        print("top_machine:", direction)
-        if direction == 'right':
-            top_motor.forward()
-            pass
+# class TopMachine:
+#     @staticmethod
+#     def execute(direction):
+#         print("top_machine:", direction)
+#         if direction == 'right':
+#             top_motor.forward()
+#             pass
 
-        if direction == 'left':
-            top_motor.backward()
-            pass
+#         if direction == 'left':
+#             top_motor.backward()
+#             pass
 
-        if direction == 'stop':
-            top_motor.stop()
-            pass
+#         if direction == 'stop':
+#             top_motor.stop()
+#             pass
