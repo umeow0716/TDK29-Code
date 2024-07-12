@@ -11,7 +11,7 @@
     <div class="panel">
       <div class="flex-column width100">
         <span class="flex-row flex-center width100" name="row1">
-          <button ontouchstart='movement(this, event, "forward")' ontouchend="movement_touchend(this)" ontouchcancel="movement_touchend(this)">
+          <button ontouchstart='movement(this, event, "forward")' ontouchend="movementTouchEnd(this)" ontouchcancel="movementTouchEnd(this)">
             <span class="material-symbols-outlined">
               arrow_upward
             </span>
@@ -19,12 +19,12 @@
         </span>
         
         <span class="flex-row flex-space-between padding-left10vw padding-right10vw margin-top margin-bottom" name="row2">
-          <button ontouchstart='movement(this, event, "left")' ontouchend="movement_touchend(this)" ontouchcancel="movement_touchend(this)">
+          <button ontouchstart='movement(this, event, "left")' ontouchend="movementTouchEnd(this)" ontouchcancel="movementTouchEnd(this)">
             <span class="material-symbols-outlined">
               arrow_left_alt
             </span>
           </button>
-          <button ontouchstart='movement(this, event, "right")' ontouchend="movement_touchend(this)" ontouchcancel="movement_touchend(this)">
+          <button ontouchstart='movement(this, event, "right")' ontouchend="movementTouchEnd(this)" ontouchcancel="movementTouchEnd(this)">
             <span class="material-symbols-outlined">
               arrow_right_alt
             </span>
@@ -32,9 +32,23 @@
         </span>
         
         <span class="flex-row flex-center width100" name="row3">
-          <button ontouchstart='movement(this, event, "backward")' ontouchend="movement_touchend(this)" ontouchcancel="movement_touchend(this)">
+          <button ontouchstart='movement(this, event, "backward")' ontouchend="movementTouchEnd(this)" ontouchcancel="movementTouchEnd(this)">
             <span class="material-symbols-outlined">
               arrow_downward
+            </span>
+          </button>
+        </span>
+
+        <br /><br />
+        <span class="flex-row flex-space-between padding-left10vw padding-right10vw margin-top margin-bottom" name="row4">
+          <button ontouchstart='arduinoTestHigh(this, event, "nothing")' ontouchend="basicTouchEnd(this)" ontouchcancel="basicTouchEnd(this)">
+            <span class="material-symbols-outlined">
+              arrow_left_alt
+            </span>
+          </button>
+          <button ontouchstart='arduinoTestLow(this, event, "nothing")' ontouchend="basicTouchEnd(this)" ontouchcancel="basicTouchEnd(this)">
+            <span class="material-symbols-outlined">
+              arrow_right_alt
             </span>
           </button>
         </span>

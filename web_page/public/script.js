@@ -23,11 +23,46 @@ function movement(ele, event, data) {
   const audio = document.createElement("audio")
   audio.src = `${data}.mp3`
   audio.play()
-  plus_one(event)
+  plusOne(event)
   window.navigator.vibrate(20)
 }
 
-function movement_touchend(ele) {
+function arduinoTestHigh(ele, event, _data) {
+  try {
+    ws.send(JSON.stringify({
+      type: 'arduino',
+      "data": '{"pin": 13, "state": 1}'
+    }))
+  } catch(err) {
+    console.error(err)
+  }
+  ele?.classList?.add("button-touched")
+
+  if(!isTrust) return
+
+  plusOne(event)
+  window.navigator.vibrate(20)
+}
+
+function arduinoTestLow(ele, event, _data) {
+  try {
+    ws.send(JSON.stringify({
+      type: 'arduino',
+      "data": '{"pin": 13, "state": 0}'
+    }))
+  } catch(err) {
+    console.error(err)
+  }
+  ele?.classList?.add("button-touched")
+
+  if(!isTrust) return
+
+  plusOne(event)
+  window.navigator.vibrate(20)
+}
+
+
+function movementTouchEnd(ele) {
   try {
     ws.send(JSON.stringify({
       type: 'movement',
@@ -40,7 +75,12 @@ function movement_touchend(ele) {
   isTrust = true
 }
 
-function plus_one(event) {
+function basicTouchEnd(ele) {
+  ele.classList.remove("button-touched")
+  isTrust = true
+}
+
+function plusOne(event) {
   console.log(event)
   let x = event.targetTouches[0].clientX + 10;
   let y = event.targetTouches[0].clientY - 30;
@@ -49,7 +89,7 @@ function plus_one(event) {
   element.innerHTML = '功德 +1'
   element.setAttribute("style", `position: fixed;top: ${y}px;left: ${x}px;`)
   document.body.appendChild(element)
-  element.setAttribute("class", "plus_one")
+  element.setAttribute("class", "plus-one")
 
   setTimeout(() => {
     element.remove()
