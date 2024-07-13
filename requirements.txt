@@ -1,4 +1,2 @@
-rpi-gpio==0.7.1
-gpiozero==2.0.1
-lgpio==0.2.2.0
+RPi.GPIO==0.7.1
 websockets==12.0

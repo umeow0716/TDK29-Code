@@ -1,25 +1,22 @@
-# from gpiozero import Motor, LED
+from .raspberry.motor import Motor
 
-# try:
-#     top_motor = Motor(2, 3)
+try:
+    top_motor = Motor(2, 3, 4)
+except:
+    pass
 
-#     top_motor_pwm = LED(4)
+class TopMachine:
+    @staticmethod
+    def execute(direction):
+        print("top_machine:", direction)
+        if direction == 'right':
+            top_motor.forward()
+            pass
 
-# except:
-#     pass
+        if direction == 'left':
+            top_motor.backward()
+            pass
 
-# class TopMachine:
-#     @staticmethod
-#     def execute(direction):
-#         print("top_machine:", direction)
-#         if direction == 'right':
-#             top_motor.forward()
-#             pass
-
-#         if direction == 'left':
-#             top_motor.backward()
-#             pass
-
-#         if direction == 'stop':
-#             top_motor.stop()
-#             pass
+        if direction == 'stop':
+            top_motor.stop()
+            pass

@@ -1,6 +1,6 @@
 import json
-from robot.movement import Movement
-# from robot.top_machine import TopMachine
+from .movement import Movement
+from .top_machine import TopMachine
 # from robot.arduino import Arduino
 
 class CommandParser():
@@ -12,8 +12,8 @@ class CommandParser():
         if command['type'] == 'movement':
             Movement.execute(command['data'])
 
-        # if command['type'] == 'top_machine':
-        #     TopMachine.execute(command['data'])
+        if command['type'] == 'top_machine':
+            TopMachine.execute(command['data'])
             
         # if command['type'] == 'arduino':
         #     Arduino.execute(command['data'])

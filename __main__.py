@@ -1,3 +1,6 @@
+
+import RPi.GPIO as GPIO
+
 from websocket.websocket_server import WebSocketServer
 
 def keep_alive():
