@@ -1,3 +1,5 @@
+document.addEventListener('contextmenu', event => event.preventDefault()); // no 右鍵
+
 const url = new URL(window.location.href)
 const ip = url.host.split(':')[0]
 
