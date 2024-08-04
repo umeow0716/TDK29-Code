@@ -39,6 +39,19 @@
           </button>
         </span>
 
+        <span class="flex-row flex-space-between padding-left10vw padding-right10vw margin-top margin-bottom" name="row4">
+          <button ontouchstart='movement(this, event, "clockwise")' ontouchend="movementTouchEnd(this)" ontouchcancel="movementTouchEnd(this)">
+            <span class="material-symbols-outlined">
+              restart_alt
+            </span>
+          </button>
+          <button ontouchstart='movement(this, event, "counterclockwise")' ontouchend="movementTouchEnd(this)" ontouchcancel="movementTouchEnd(this)">
+            <span class="material-symbols-outlined">
+              refresh
+            </span>
+          </button>
+        </span>
+
         <br /><br />
         <span class="flex-row flex-space-between padding-left10vw padding-right10vw margin-top margin-bottom" name="row4">
           <button ontouchstart='topMachine(this, event, "left")' ontouchend="topMachineTouchEnd(this)" ontouchcancel="topMachineTouchEnd(this)">
