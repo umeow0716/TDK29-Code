@@ -9,63 +9,62 @@
   </head>
   <body>
     <div class="panel">
-      <div class="flex-column width100">
-        <span class="flex-row flex-center width100" name="row1">
-          <button ontouchstart='movement(this, event, "forward")' ontouchend="movementTouchEnd(this)" ontouchcancel="movementTouchEnd(this)">
+      <div class="panel-left-side">
+        <div class="panel-direction-button flex-row flex-align-center justify-center" id="row1">
+          <button class="hight100" command-type="movement" command-data="forward" ontouchstart='commandSend(this, event)'>
             <span class="material-symbols-outlined">
               arrow_upward
             </span>
           </button>
-        </span>
-        
-        <span class="flex-row flex-space-between padding-left10vw padding-right10vw margin-top margin-bottom" name="row2">
-          <button ontouchstart='movement(this, event, "left")' ontouchend="movementTouchEnd(this)" ontouchcancel="movementTouchEnd(this)">
+        </div>
+        <div class="panel-direction-button flex-row justify-space-between" id="row2">
+          <button class="hight100" command-type="movement" command-data="left" ontouchstart="commandSend(this, event)">
             <span class="material-symbols-outlined">
               arrow_left_alt
             </span>
           </button>
-          <button ontouchstart='movement(this, event, "right")' ontouchend="movementTouchEnd(this)" ontouchcancel="movementTouchEnd(this)">
+          <button class="hight100" command-type="movement" command-data="right" ontouchstart="commandSend(this, event)">
             <span class="material-symbols-outlined">
               arrow_right_alt
             </span>
           </button>
-        </span>
-        
-        <span class="flex-row flex-center width100" name="row3">
-          <button ontouchstart='movement(this, event, "backward")' ontouchend="movementTouchEnd(this)" ontouchcancel="movementTouchEnd(this)">
+        </div>
+        <div class="panel-direction-button flex-row flex-align-center justify-center" id="row3">
+          <button class="hight100" command-type="movement" command-data="backward" ontouchstart="commandSend(this, event)">
             <span class="material-symbols-outlined">
               arrow_downward
             </span>
           </button>
-        </span>
-
-        <span class="flex-row flex-space-between padding-left10vw padding-right10vw margin-top margin-bottom" name="row4">
-          <button ontouchstart='movement(this, event, "clockwise")' ontouchend="movementTouchEnd(this)" ontouchcancel="movementTouchEnd(this)">
-            <span class="material-symbols-outlined">
-              restart_alt
-            </span>
+        </div>
+      </div>
+      <div class="panel-right-side flex-row">
+        <div class="panel-right-column justify-space-between" id="column1">
+          <button command-type="front_board" command-data="up" ontouchstart="commandSend(this, event)">
+            板子上升
           </button>
-          <button ontouchstart='movement(this, event, "counterclockwise")' ontouchend="movementTouchEnd(this)" ontouchcancel="movementTouchEnd(this)">
-            <span class="material-symbols-outlined">
-              refresh
-            </span>
+          <button command-type="front_board" command-data="down" ontouchstart="commandSend(this, event)">
+            板子下降
           </button>
-        </span>
-
-        <br /><br />
-        <span class="flex-row flex-space-between padding-left10vw padding-right10vw margin-top margin-bottom" name="row4">
-          <button ontouchstart='topMachine(this, event, "left")' ontouchend="topMachineTouchEnd(this)" ontouchcancel="topMachineTouchEnd(this)">
-            <span class="material-symbols-outlined">
-              arrow_left_alt
-            </span>
+        </div>
+        <div class="panel-right-column justify-space-between" id="column1">
+          <button command-type="platform" command-data="up" ontouchstart="commandSend(this, event)">
+            平台上升
           </button>
-          <button ontouchstart='topMachine(this, event, "right")' ontouchend="topMachineTouchEnd(this)" ontouchcancel="topMachineTouchEnd(this)">
-            <span class="material-symbols-outlined">
-              arrow_right_alt
-            </span>
+          <button command-type="platform" command-data="down" ontouchstart="commandSend(this, event)">
+            平台下降
           </button>
-        </span>
+        </div>
+        <div class="panel-right-column" id="column1">
+          <label class="switch">
+            <input type="checkbox" command-type="ball_door" command-data="open,close" onchange="commandSend(this, event)">
+            <span class="slider round"></span>
+            {{/*  <div class="up">開</div>
+            <div class="down">關</div>  */}}
+          </label>
+        </div>
       </div>
     </div>
+
+    <span class="status-dot status-waiting" id="dot"></span>
   </body>
 </html>

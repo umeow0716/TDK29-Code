@@ -1,6 +1,9 @@
 import json
 from .movement import Movement
-from .top_machine import TopMachine
+from .front_board import FrontBoard
+from .platform import Platform
+from .ball_door import BallDoor
+# from .top_machine import TopMachine
 # from robot.arduino import Arduino
 
 class CommandParser():
@@ -9,11 +12,16 @@ class CommandParser():
         command = json.loads(command_str)
         
         print(command['type'])
+        
         if command['type'] == 'movement':
             Movement.execute(command['data'])
-
-        if command['type'] == 'top_machine':
-            TopMachine.execute(command['data'])
+        elif command['type'] == 'front_board':
+            FrontBoard.execute(command['data'])
+        elif command['type'] == 'platform':
+            Platform.execute(command['data'])
+        elif command['type'] == 'ball_door':
+            BallDoor.execute(command['data'])
+            
             
         # if command['type'] == 'arduino':
         #     Arduino.execute(command['data'])

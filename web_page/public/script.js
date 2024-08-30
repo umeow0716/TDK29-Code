@@ -3,116 +3,110 @@ document.addEventListener('contextmenu', event => event.preventDefault()); // no
 const url = new URL(window.location.href)
 const ip = url.host.split(':')[0]
 
-let ws = new WebSocket(`ws://${ip}:8765`);
+let ws = null;
 
-let isTrust = false
+function websocketConnect() {
+  let dotElement = document.querySelector("#dot")
+  dotElement.classList.remove("status-ready")
+  dotElement.classList.remove("status-stopped")
+  dotElement.classList.add("status-waiting")
+  
+  ws = new WebSocket(`ws://${ip}:8765`)
 
+  ws.addEventListener("open", (_event) => {
+    dotElement.classList.remove("status-waiting")
+    dotElement.classList.remove("status-stopped")
+    dotElement.classList.add("status-ready")
+  })
+  
+  ws.addEventListener("close", (_event) => {
+    dotElement.classList.remove("status-waiting")
+    dotElement.classList.remove("status-ready")
+    dotElement.classList.add("status-stopped")
+  
+    setTimeout(websocketConnect, 1000);
+  })
+}
+
+addEventListener("DOMContentLoaded", websocketConnect);
 setInterval(keep_alive, 10000)
 
-function movement(ele, event, data) {
-  try {
-    ws.send(JSON.stringify({
-      type: 'movement',
-      data
-    }))
-  } catch(err) {
-    console.error(err)
-  }
-  ele?.classList?.add("button-touched")
+function commandSend(ele, event) {
+  if(ele.tagName === "BUTTON") ele?.classList?.add("button-touched")
 
-  if(!isTrust) return
+  const commandType = ele.getAttribute("command-type")
+  const commandData = ele.getAttribute("command-data")
+
+  if(!commandType || !commandData) return;
+
+  if(ele.tagName === "BUTTON") {
+    try {
+      ws.send(JSON.stringify({
+        type: commandType,
+        data: commandData
+      }))
+    } catch(err) {
+      console.error(err)
+    }
+    typeEmit(commandType, ele, event);
+  } else if(commandType === "ball_door") {
+    const realData = ele.checked ? "open" : "close"
+    try {
+      ws.send(JSON.stringify({
+        type: commandType,
+        data: realData
+      }))
+    } catch(err) {
+      console.error(err)
+    }
+  }
+}
+
+function typeEmit(commandType, ele, event) {
+  if(commandType === "movement") {
+    if(!ele.ontouchend) ele.ontouchend = () => { defaultTouchEnd(ele) };
+    if(!ele.ontouchcancel) ele.ontouchcancel = () => { defaultTouchEnd(ele) };
+
+    movement(ele, event)
+  } else {
+    if(ele.tagName === "BUTTON" && !ele.ontouchend) ele.ontouchend = () => { defaultTouchEnd(ele) };
+    if(ele.tagName === "BUTTON" && !ele.ontouchcancel) ele.ontouchcancel = () => { defaultTouchEnd(ele) };
+
+    defaultTouchStart(ele, event)
+  }
+}
+
+function movement(ele, event) {
+  const commandData = ele.getAttribute("command-data")
 
   const audio = document.createElement("audio")
-  audio.src = `${data}.mp3`
+  audio.src = `${commandData}.mp3`
   audio.play()
   plusOne(event)
   window.navigator.vibrate(20)
 }
 
-function topMachine(ele, event, data) {
-  try {
-    ws.send(JSON.stringify({
-      type: 'top_machine',
-      data
-    }))
-  } catch(err) {
-    console.error(err)
-  }
-  ele?.classList?.add("button-touched")
-
-  if(!isTrust) return
-
+function defaultTouchStart(_ele, event) {
   const audio = document.createElement("audio")
-  audio.src = `${data}.mp3`
+  audio.src = "forward.mp3"
   audio.play()
   plusOne(event)
   window.navigator.vibrate(20)
 }
 
-function topMachineTouchEnd(ele) {
+function defaultTouchEnd(ele) {
+  const commandType = ele.getAttribute("command-type")
+
   try {
     ws.send(JSON.stringify({
-      type: 'top_machine',
-      data: 'stop'
+      type: commandType,
+      data: "stop"
     }))
   } catch(err) {
     console.error(err)
   }
+
   ele.classList.remove("button-touched")
-  isTrust = true
-}
-
-function arduinoTestHigh(ele, event, _data) {
-  try {
-    ws.send(JSON.stringify({
-      type: 'arduino',
-      "data": '{"pin": 13, "state": 1}'
-    }))
-  } catch(err) {
-    console.error(err)
-  }
-  ele?.classList?.add("button-touched")
-
-  if(!isTrust) return
-
-  plusOne(event)
-  window.navigator.vibrate(20)
-}
-
-function arduinoTestLow(ele, event, _data) {
-  try {
-    ws.send(JSON.stringify({
-      type: 'arduino',
-      "data": '{"pin": 13, "state": 0}'
-    }))
-  } catch(err) {
-    console.error(err)
-  }
-  ele?.classList?.add("button-touched")
-
-  if(!isTrust) return
-
-  plusOne(event)
-  window.navigator.vibrate(20)
-}
-
-
-function movementTouchEnd(ele) {
-  try {
-    ws.send(JSON.stringify({
-      type: 'movement',
-      data: 'stop'
-    }))
-  } catch(err) {
-    console.error(err)
-  }
-  ele.classList.remove("button-touched")
-  isTrust = true
-}
-
-function basicTouchEnd(ele) {
-  ele.classList.remove("button-touched")
-  isTrust = true
 }
 
 function plusOne(event) {

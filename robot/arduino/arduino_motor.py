@@ -7,6 +7,7 @@ class ArduinoMotor:
         self.pwm_pin = pwm_pin
         
         Arduino.analogWrite(self.pwm_pin, 255)
+        self.stop()
     
     def forward(self):
         Arduino.digitalWrite(self.forward_pin, 1)
