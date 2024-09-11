@@ -14,8 +14,7 @@ class WebSocketServer:
     @staticmethod
     async def echo(websocket):
         async for message in websocket:
-            CommandParser.parse(message)
-            await websocket.send('done!')
+            await websocket.send(CommandParser.parse(message))
 
     @staticmethod
     async def main():

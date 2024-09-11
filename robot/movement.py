@@ -6,25 +6,41 @@ class Movement:
     right_wheel = ArduinoMotor(24, 25, 3)
     
     @staticmethod
+    def forward():
+        Movement.left_wheel.forward()
+        Movement.right_wheel.forward()
+    
+    @staticmethod
+    def backward():
+        Movement.left_wheel.backward()
+        Movement.right_wheel.backward()
+    
+    @staticmethod
+    def right():
+        Movement.left_wheel.forward()
+        Movement.right_wheel.backward()
+    
+    @staticmethod
+    def left():
+        Movement.left_wheel.backward()
+        Movement.right_wheel.forward()
+    
+    @staticmethod
+    def stop():
+        Movement.left_wheel.stop()
+        Movement.left_wheel.stop()
+    
+    @staticmethod
     def execute(direction, soft=True):
         print("movement:", direction)
         if direction == 'forward':
-            # wheel process...
-            Movement.right_wheel.forward()
-            Movement.left_wheel.forward()
-            pass
+            Movement.forward()
 
         if direction == 'backward':
-            # wheel process...
-            Movement.right_wheel.backward()
-            Movement.left_wheel.backward()
-            pass
+            Movement.backward()
 
         if direction == 'right':
-            # wheel process...
-            Movement.left_wheel.forward()
-            Movement.right_wheel.backward()
-            pass
+            Movement.right()
 
         # if direction == 'right':  #麥輪
         #     # wheel process...
@@ -35,10 +51,7 @@ class Movement:
         #     pass
 
         if direction == 'left':
-            # wheel process...
-            Movement.left_wheel.backward()
-            Movement.right_wheel.forward()
-            pass
+            Movement.left()
 
         # if direction == 'left':   #麥輪
         #     # wheel process...
@@ -59,10 +72,7 @@ class Movement:
         #     pass
 
         if not soft and direction == 'stop':
-            # wheel process...
-            Movement.right_wheel.stop()
-            Movement.left_wheel.stop()
-            pass
+            Movement.stop()
         
         if soft and direction != 'stop':
             for speed in range(100, 256):
