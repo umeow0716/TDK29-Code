@@ -1,36 +1,56 @@
 from time import sleep
 from .arduino.arduino_motor import ArduinoMotor
-from .joystick_command_parser import JoystickCommandParser
 
 class Movement:
     left_wheel = ArduinoMotor(22, 23, 2)
     right_wheel = ArduinoMotor(24, 25, 3)
     
+    state = 'stop'
+    
     @staticmethod
     def forward():
+        if Movement.state == 'forward':
+            return
+        print('forward')
         Movement.left_wheel.forward()
         Movement.right_wheel.forward()
+        Movement.state = 'forward'
     
     @staticmethod
     def backward():
+        if Movement.state == 'backward':
+            return
+        print('backward')
         Movement.left_wheel.backward()
         Movement.right_wheel.backward()
+        Movement.state = 'backward'
     
     @staticmethod
     def right():
+        if Movement.state == 'right':
+            return
+        print('right')
         Movement.left_wheel.forward()
         Movement.right_wheel.backward()
+        Movement.state = 'right'
     
     @staticmethod
     def left():
+        if Movement.state == 'left':
+            return
+        print('left')
         Movement.left_wheel.backward()
         Movement.right_wheel.forward()
+        Movement.state = 'left'
     
     @staticmethod
     def stop():
+        if Movement.state == 'stop':
+            return
         print('stop')
         Movement.left_wheel.stop()
         Movement.left_wheel.stop()
+        Movement.state = 'stop'
     
     @staticmethod
     def execute(direction, soft=False):

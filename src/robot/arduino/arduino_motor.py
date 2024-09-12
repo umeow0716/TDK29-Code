@@ -5,6 +5,7 @@ class ArduinoMotor:
         self.forward_pin = forward_pin
         self.backward_pin = backward_pin
         self.pwm_pin = pwm_pin
+        self.speed = 255
         
         Arduino.analogWrite(self.pwm_pin, 255)
         self.stop()
@@ -22,4 +23,7 @@ class ArduinoMotor:
         Arduino.digitalWrite(self.backward_pin, 0)
     
     def setSpeed(self, speed):
+        if speed == self.speed:
+            return
         Arduino.analogWrite(self.pwm_pin, speed)
+        self.speed = speed
