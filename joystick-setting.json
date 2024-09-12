@@ -50,10 +50,10 @@
         "when_moved": null
     },
     "axis_l": {
-        "when_moved": null
+        "when_moved": "when_axis_l_change"
     },
     "axis_r": {
-        "when_moved": null
+        "when_moved": "when_axis_r_change"
     },
     "hat": {
         "when_moved": null

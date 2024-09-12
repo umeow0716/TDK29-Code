@@ -18,6 +18,11 @@ function websocketConnect() {
     dotElement.classList.remove("status-stopped")
     dotElement.classList.add("status-ready")
   })
+
+  ws.addEventListener("message", (event) => {
+    if(event.data === "using joystick!")
+      alert("不能同時使用 搖桿 與 網頁 操作！")
+  })
   
   ws.addEventListener("close", (_event) => {
     dotElement.classList.remove("status-waiting")
