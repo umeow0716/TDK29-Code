@@ -1,3 +1,4 @@
+from ..joystick.joystick import Joystick
 from .raspberry.servo import Servo
 
 class BallDoor():
@@ -5,6 +6,7 @@ class BallDoor():
     state = 'close'
     
     @staticmethod
+    @Joystick.when_button_a_press_wrapper
     def next_step():
         if BallDoor.state == 'close':
             BallDoor.servo.write(70)
@@ -12,8 +14,6 @@ class BallDoor():
         elif BallDoor.state == 'open':
             BallDoor.servo.write(0)
             BallDoor.state = 'close'
-        print(BallDoor.state)
-        
     
     @staticmethod
     def execute(data):

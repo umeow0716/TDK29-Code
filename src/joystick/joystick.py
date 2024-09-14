@@ -34,6 +34,10 @@ class Joystick:
     button_b_release_func_list = []
     button_x_release_func_list = []
     button_y_release_func_list = []
+    
+    @staticmethod
+    def when_button_a_press_wrapper(func):
+        Joystick.button_a_press_func_list.append(func)
         
     @staticmethod
     def start_thread():
@@ -180,9 +184,12 @@ class Joystick:
                 if arr[3].startswith(' value'):
                     value_num = int(arr[3].split(' ')[2])
                 
-                print(line)
                 print(code_num)
                 print(value_num)
+                
+                if code_num == 304 and value_num == 1:
+                    for func in Joystick.button_a_press_func_list:
+                        func()
             except:
                 pass
         
