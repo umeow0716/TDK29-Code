@@ -1,13 +1,13 @@
 from .arduino import Arduino
 
 class ArduinoMotor:
-    def __init__(self, forward_pin, backward_pin, pwm_pin):
+    def __init__(self, forward_pin, backward_pin, pwm_pin, default_speed=255):
         self.forward_pin = forward_pin
         self.backward_pin = backward_pin
         self.pwm_pin = pwm_pin
-        self.speed = 255
+        self.speed = default_speed
         
-        Arduino.analogWrite(self.pwm_pin, 255)
+        Arduino.analogWrite(self.pwm_pin, default_speed)
         self.stop()
     
     def forward(self):

@@ -2,8 +2,8 @@ from time import sleep
 from .arduino.arduino_motor import ArduinoMotor
 
 class Movement:
-    left_wheel = ArduinoMotor(22, 23, 2)
-    right_wheel = ArduinoMotor(24, 25, 3)
+    left_wheel = ArduinoMotor(24, 25, 2)
+    right_wheel = ArduinoMotor(22, 23, 3)
     
     state = 'stop'
     
@@ -49,7 +49,7 @@ class Movement:
             return
         print('stop')
         Movement.left_wheel.stop()
-        Movement.left_wheel.stop()
+        Movement.right_wheel.stop()
         Movement.state = 'stop'
     
     @staticmethod
@@ -93,19 +93,19 @@ class Movement:
         #     Movement.left_wheel.backward()
         #     pass
 
-        if not soft and direction == 'stop':
+        if direction == 'stop':
             Movement.stop()
         
-        if soft and direction != 'stop':
-            for speed in range(100, 256):
-                Movement.right_wheel.setSpeed(speed)
-                Movement.left_wheel.setSpeed(speed)
-                sleep(0.005)
-        elif soft:
-            for speed in range(0, 101)[::-1]:
-                Movement.right_wheel.setSpeed(speed)
-                Movement.left_wheel.setSpeed(speed)
-                sleep(0.005)
-            Movement.right_wheel.stop()
-            Movement.left_wheel.stop()
+        # if soft and direction != 'stop':
+        #     for speed in range(100, 256):
+        #         Movement.right_wheel.setSpeed(speed)
+        #         Movement.left_wheel.setSpeed(speed)
+        #         sleep(0.005)
+        # elif soft:
+        #     for speed in range(0, 101)[::-1]:
+        #         Movement.right_wheel.setSpeed(speed)
+        #         Movement.left_wheel.setSpeed(speed)
+        #         sleep(0.005)
+        #     Movement.right_wheel.stop()
+        #     Movement.left_wheel.stop()
                 

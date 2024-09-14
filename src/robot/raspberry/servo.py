@@ -5,6 +5,7 @@ class Servo:
         GPIO.setup(pin, GPIO.OUT)
         self.servo = GPIO.PWM(pin, 50)
         self.servo.start(0)
+        self.write(0)
     
     def write(self, angle):
         self.servo.ChangeDutyCycle((angle/18.0) + 2.5)
