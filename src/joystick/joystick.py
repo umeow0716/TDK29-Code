@@ -1,196 +1,272 @@
-import subprocess
+from evdev import InputDevice, ff, ecodes
 
 from time import sleep
 from os.path import exists
 from threading import Thread
 
+def safety_func_wrapper(func):
+    def executor(*args, **kwargs):
+        try:
+            Thread(target=func, args=args, kwargs=kwargs, daemon=True).run()
+        except Exception as err:
+            print(err)
+    return executor
+
 class Joystick:
-    jstest_exist = False
-    jstest_proc = None
-    evtest_exist = False
-    evtest_proc = None
+    exist = False
+    dev = None
     
-    axis_r = (0, 0, False)
-    axis_l = (0, 0, False)
-    hat = (0, 0)
-    button_a = False
-    button_b = False
-    button_x = False
-    button_y = False
-    LB = False
-    RB = False
-    button_select = False
-    button_menu = False
-    button_start = False
-    LT = 0
-    RT = 0
+    button_a_change_func_list = []
+    button_b_change_func_list = []
+    button_x_change_func_list = []
+    button_y_change_func_list = []
+    button_select_change_func_list = []
+    button_mode_change_func_list = []
+    button_start_change_func_list = []
     
-    button_a_press_func_list = []
-    button_b_press_func_list = []
-    button_x_press_func_list = []
-    button_y_press_func_list = []
+    button_a_previous_press_timestamp = None
+    button_b_previous_press_timestamp = None
+    button_x_previous_press_timestamp = None
+    button_y_previous_press_timestamp = None
     
-    button_a_release_func_list = []
-    button_b_release_func_list = []
-    button_x_release_func_list = []
-    button_y_release_func_list = []
+    lb_change_func_list = []
+    lt_change_func_list = []
+    
+    rb_change_func_list = []
+    rt_change_func_list = []
+    
+    axis_left_change_func_list = []
+    axis_left_x = 0
+    axis_left_y = 0
+    axis_left_btn = False
+    
+    axis_right_change_func_list = []
+    axis_right_x = 0
+    axis_right_y = 0
+    axis_right_btn = False
+    
+    axis_hat_change_func_list = []
+    axis_hat_x = 0
+    axis_hat_y = 0
     
     @staticmethod
-    def when_button_a_press_wrapper(func):
-        Joystick.button_a_press_func_list.append(func)
+    def when_button_a_change_wrapper(func):
+        safety_func = safety_func_wrapper(func)
+        Joystick.button_a_change_func_list.append(safety_func)
         
+    @staticmethod
+    def when_button_b_change_wrapper(func):
+        safety_func = safety_func_wrapper(func)
+        Joystick.button_b_change_func_list.append(safety_func)
+        
+    @staticmethod
+    def when_button_x_change_wrapper(func):
+        safety_func = safety_func_wrapper(func)
+        Joystick.button_x_change_func_list.append(safety_func)
+        
+    @staticmethod
+    def when_button_y_change_wrapper(func):
+        safety_func = safety_func_wrapper(func)
+        Joystick.button_y_change_func_list.append(safety_func)
+        
+    @staticmethod
+    def when_button_select_change_wrapper(func):
+        safety_func = safety_func_wrapper(func)
+        Joystick.button_select_change_func_list.append(safety_func)
+        
+    @staticmethod
+    def when_button_mode_change_wrapper(func):
+        safety_func = safety_func_wrapper(func)
+        Joystick.button_mode_change_func_list.append(safety_func)
+        
+    @staticmethod
+    def when_button_start_change_wrapper(func):
+        safety_func = safety_func_wrapper(func)
+        Joystick.button_start_change_func_list.append(safety_func)
+        
+    @staticmethod
+    def when_rb_change_wrapper(func):
+        safety_func = safety_func_wrapper(func)
+        Joystick.rb_change_func_list.append(safety_func)
+        
+    @staticmethod
+    def when_lb_change_wrapper(func):
+        safety_func = safety_func_wrapper(func)
+        Joystick.lb_change_func_list.append(safety_func)
+    
+    @staticmethod
+    def when_lt_change_wrapper(func):
+        safety_func = safety_func_wrapper(func)
+        Joystick.lt_change_func_list.append(safety_func)
+    
+    @staticmethod
+    def when_rt_change_wrapper(func):
+        safety_func = safety_func_wrapper(func)
+        Joystick.rt_change_func_list.append(safety_func)
+        
+    @staticmethod
+    def when_axis_left_change_wrapper(func):
+        safety_func = safety_func_wrapper(func)
+        Joystick.axis_left_change_func_list.append(safety_func)
+    
+    @staticmethod
+    def when_axis_right_change_wrapper(func):
+        safety_func = safety_func_wrapper(func)
+        Joystick.axis_right_change_func_list.append(safety_func)
+    
+    @staticmethod
+    def when_axis_hat_change_wrapper(func):
+        safety_func = safety_func_wrapper(func)
+        Joystick.axis_hat_change_func_list.append(safety_func)
+    
     @staticmethod
     def start_thread():
-        jstest_thread = Thread(target=Joystick._jstest_thread_job)
-        jstest_thread.setDaemon(True)
-        jstest_thread.start()
+        thread = Thread(target=Joystick._thread_job)
+        thread.setDaemon(True)
+        thread.start()
         
-        jstest_proc = Thread(target=Joystick._process_jstest_readline)
-        jstest_proc.setDaemon(True)
-        jstest_proc.start()
-        
-        evtest_thread = Thread(target=Joystick._evtest_thread_job)
-        evtest_thread.setDaemon(True)
-        evtest_thread.start()
-        
-        evtest_proc = Thread(target=Joystick._process_evtest_readline)
-        evtest_proc.setDaemon(True)
-        evtest_proc.start()
+        proc = Thread(target=Joystick._process_job)
+        proc.setDaemon(True)
+        proc.start()
         
     @staticmethod
-    def _jstest_thread_job():
+    def vibration():
+        try:
+            Joystick.dev.write(ecodes.EV_FF, 0, 1)
+        except:
+            pass
+    
+    @staticmethod
+    def _thread_job():
         while True:
-            jstest_exist_previous = Joystick.jstest_exist
-            Joystick.jstest_exist = exists('/dev/input/js0')
+            evtest_exist_previous = Joystick.exist
+            Joystick.exist = exists('/dev/input/by-id/usb-ASUSTeK_ROG_RAIKIRI_PRO_0123456789AB-event-joystick')
             
-            is_changed = jstest_exist_previous != Joystick.jstest_exist
-        
-            if Joystick.jstest_exist and is_changed:
-                Joystick.jstest_proc = subprocess.Popen('jstest /dev/input/js0', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, universal_newlines=True)
-                Joystick.jstest_proc.stdout.read(241)
+            is_changed = evtest_exist_previous != Joystick.exist
+            
+            if Joystick.exist and is_changed:
+                Joystick.dev = InputDevice('/dev/input/by-id/usb-ASUSTeK_ROG_RAIKIRI_PRO_0123456789AB-event-joystick')
+                rumble = ff.Rumble(strong_magnitude=0xffff, weak_magnitude=0x0000)
+                effect_type = ff.EffectType(ff_rumble_effect=rumble)
+                duration_ms = 3000
+
+                effect = ff.Effect(
+                    ecodes.FF_RUMBLE, -1, 0,
+                    ff.Trigger(0, 0),
+                    ff.Replay(duration_ms, 0),
+                    effect_type
+                )
+                Joystick.dev.upload_effect(effect)
             elif is_changed:
-                Joystick.jstest_proc.kill()
-                Joystick.jstest_exist = None
+                Joystick.dev = None
             sleep(5)
     
     @staticmethod
-    def _process_jstest_readline():
-        while True:
-            packet = None
-            try:
-                if Joystick.jstest_proc is None:
-                    sleep(2)
+    def _process_job():
+        try:
+            while True:
+                if Joystick.dev is None:
+                    sleep(1)
                     continue
-                
-                char = Joystick.jstest_proc.stdout.read(1)
-                if char == '\n':
-                    header = Joystick.jstest_proc.stdout.read(4)
-                    if header != 'Axes':
-                        continue
-                    data = Joystick.jstest_proc.stdout.read(168)
-                    packet = char + header + data
-                
-                if packet is None:
-                    continue
-                    
-                delimiters = [':']
- 
-                for delimiter in delimiters:
-                    packet = ' '.join(packet.split(delimiter))
-
-                arr = packet.split()
-                
-                axis_l_x = int(arr[2])
-                axis_l_y = -int(arr[4])
-                axis_l_button = 'on' == arr[-3]
-                
-                axis_r_x = int(arr[8])
-                axis_r_y = -int(arr[10])
-                axis_r_button = 'on' == arr[-1]
-                
-                hat_x = int(arr[14]) // 32767
-                hat_y = -int(arr[16]) // 32767
-                
-                button_a = 'on' == arr[19]
-                button_b = 'on' == arr[21]
-                button_x = 'on' == arr[23]
-                button_y = 'on' == arr[25]
-                
-                LB = 'on' == arr[27]
-                RB = 'on' == arr[29]
-                
-                button_select = 'on' == arr[31]
-                button_menu = 'on' == arr[33]
-                button_start = 'on' == arr[35]
-                
-                LT = (int(arr[6]) + 32768) / 65535
-                RT = (int(arr[12]) + 32768) / 65535
-                
-                Joystick.axis_l = (axis_l_x, axis_l_y, axis_l_button)
-                Joystick.axis_r = (axis_r_x, axis_r_y, axis_r_button)
-                Joystick.hat = (hat_x, hat_y)
-                Joystick.button_a = button_a
-                Joystick.button_b = button_b
-                Joystick.button_x = button_x
-                Joystick.button_y = button_y
-                Joystick.LB = LB
-                Joystick.RB = RB
-                Joystick.button_select = button_select
-                Joystick.button_menu = button_menu
-                Joystick.button_start = button_start
-                Joystick.LT = LT
-                Joystick.RT = RT
-            except Exception as err:
-                print(err)
-                pass
-    
-    @staticmethod
-    def _evtest_thread_job():
-        while True:
-            evtest_exist_previous = Joystick.evtest_exist
-            Joystick.evtest_exist = exists('/dev/input/by-id/usb-ASUSTeK_ROG_RAIKIRI_PRO_0123456789AB-event-joystick')
             
-            is_changed = evtest_exist_previous != Joystick.evtest_exist
-            
-            if Joystick.evtest_exist and is_changed:
-                Joystick.evtest_proc = subprocess.Popen('evtest /dev/input/by-id/usb-ASUSTeK_ROG_RAIKIRI_PRO_0123456789AB-event-joystick', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
-            elif is_changed:
-                Joystick.evtest_proc.kill()
-                Joystick.evtest_proc = None
-            sleep(5)
-    
-    @staticmethod
-    def _process_evtest_readline():
-        while True:
-            try:
-                if Joystick.evtest_proc is None:
-                    sleep(5)
-                    continue
-                
-                line = Joystick.evtest_proc.stdout.readline().decode('utf-8')
-                
-                if not line.startswith('Event:'):
-                    continue
-                
-                arr = line.split(',')
-
-                if not arr[2].startswith(' code'):
-                    continue
+                for event in Joystick.dev.read_loop():
+                    # print(event)
+                    if event.type == 0:
+                        pass
                     
-                code_num = int(arr[2].split(' ')[2])
-                
-                value_num = None
-                
-                if arr[3].startswith(' value'):
-                    value_num = int(arr[3].split(' ')[2])
-                
-                print(code_num)
-                print(value_num)
-                
-                if code_num == 304 and value_num == 1:
-                    for func in Joystick.button_a_press_func_list:
-                        func()
-            except:
-                pass
+                    elif event.code == 304:
+                        for func in Joystick.button_a_change_func_list:
+                            func(event.value, timestamp=event.timestamp(), previous_press_timestamp=Joystick.button_a_previous_press_timestamp)
+                        if event.value:
+                            Joystick.button_a_previous_press_timestamp = event.timestamp()
+                    
+                    elif event.code == 305:
+                        for func in Joystick.button_b_change_func_list:
+                            func(event.value, timestamp=event.timestamp(), previous_press_timestamp=Joystick.button_b_previous_press_timestamp)
+                        if event.value:
+                            Joystick.button_b_previous_press_timestamp = event.timestamp()
+                    
+                    elif event.code == 307:
+                        for func in Joystick.button_x_change_func_list:
+                            func(event.value, timestamp=event.timestamp(), previous_press_timestamp=Joystick.button_x_previous_press_timestamp)
+                        if event.value:
+                            Joystick.button_x_previous_press_timestamp = event.timestamp()
+                    
+                    elif event.code == 308:
+                        for func in Joystick.button_y_change_func_list:
+                            func(event.value, timestamp=event.timestamp(), previous_press_timestamp=Joystick.button_y_previous_press_timestamp)
+                        if event.value:
+                            Joystick.button_y_previous_press_timestamp = event.timestamp()
+                    
+                    elif event.code == 314:
+                        for func in Joystick.button_select_change_func_list:
+                            func(event.value)
+                    
+                    elif event.code == 315:
+                        for func in Joystick.button_start_change_func_list:
+                            func(event.value)
+                    
+                    elif event.code == 316:
+                        for func in Joystick.button_mode_change_func_list:
+                            func(event.value)
+                            
+                    elif event.code == 310:
+                        for func in Joystick.lb_change_func_list:
+                            func(event.value)
+                    
+                    elif event.code == 2:
+                        for func in Joystick.lt_change_func_list:
+                            func(event.value)
+                    
+                    elif event.code == 311:
+                        for func in Joystick.rb_change_func_list:
+                            func(event.value)
+                    
+                    elif event.code == 5:
+                        for func in Joystick.rt_change_func_list:
+                            func(event.value)
+                            
+                    elif event.code == 0:
+                        Joystick.axis_left_x = event.value
+                        for func in Joystick.axis_left_change_func_list:
+                            func((Joystick.axis_left_x, Joystick.axis_left_y, Joystick.axis_left_btn))
+                    
+                    elif event.code == 1:
+                        Joystick.axis_left_y = (-event.value) - 1
+                        for func in Joystick.axis_left_change_func_list:
+                            func((Joystick.axis_left_x, Joystick.axis_left_y, Joystick.axis_left_btn))
+                    
+                    elif event.code == 317:
+                        Joystick.axis_left_btn = event.value
+                        for func in Joystick.axis_left_change_func_list:
+                            func((Joystick.axis_left_x, Joystick.axis_left_y, Joystick.axis_left_btn))
+                            
+                    elif event.code == 3:
+                        Joystick.axis_right_x = event.value
+                        for func in Joystick.axis_right_change_func_list:
+                            func((Joystick.axis_right_x, Joystick.axis_right_y, Joystick.axis_right_btn))
+                    
+                    elif event.code == 4:
+                        Joystick.axis_right_y = (-event.value) -1
+                        for func in Joystick.axis_right_change_func_list:
+                            func((Joystick.axis_right_x, Joystick.axis_right_y, Joystick.axis_right_btn))
+                    
+                    elif event.code == 318:
+                        Joystick.axis_right_btn = event.value
+                        for func in Joystick.axis_right_change_func_list:
+                            func((Joystick.axis_right_x, Joystick.axis_right_y, Joystick.axis_right_btn))
+                    
+                    elif event.code == 16:
+                        Joystick.axis_hat_x = event.value
+                        for func in Joystick.axis_hat_change_func_list:
+                            func((Joystick.axis_hat_x, Joystick.axis_hat_y))
+                            
+                    elif event.code == 17:
+                        Joystick.axis_hat_y = -event.value
+                        for func in Joystick.axis_hat_change_func_list:
+                            func((Joystick.axis_hat_x, Joystick.axis_hat_y))
+        except Exception as err:
+            print(err)
+            pass
         
         

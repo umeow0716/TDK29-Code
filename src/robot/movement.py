@@ -1,35 +1,155 @@
-from time import sleep
 from .arduino.arduino_motor import ArduinoMotor
+from ..joystick.joystick import Joystick
+from ..utils import mapping
 
 class Movement:
-    left_wheel = ArduinoMotor(24, 25, 2)
-    right_wheel = ArduinoMotor(22, 23, 3)
+    right_wheel = ArduinoMotor(24, 25, 2)
+    left_wheel = ArduinoMotor(22, 23, 3)
     
     state = 'stop'
+    
+    button_last_state = 0
+    inverse = False
+    
+    @Joystick.when_axis_left_change_wrapper
+    def joystick_axis_left_update(value, *args, **kwargs):    
+        # print(value)
+        if value[2] and value[2] != Movement.button_last_state:
+            Movement.inverse = not Movement.inverse
+        
+        abs_x, abs_y = abs(value[0]), abs(value[1])
+          
+        if abs_x < 500 and abs_y < 500:
+            return
+        
+        if abs(value[0]) < 15000 and value[1] > 16000:
+            Movement.forward()
+            
+            # print(abs(value[1]))
+            if abs_y < 30393:
+                speed = mapping(abs_y, 16000, 30392, 60, 150)
+            else:
+                speed = mapping(abs_y, 30393, 32767, 150, 255)
+            # print(f"setSpeed: {speed}")
+            Movement.right_wheel.setSpeed(speed)
+            Movement.left_wheel.setSpeed(speed)
+        
+        elif abs(value[0]) < 15000 and value[1] < -16000:
+            Movement.backward()
+            
+            if abs_y < 30393:
+                speed = mapping(abs_y, 16000, 30392, 60, 150)
+            else:
+                speed = mapping(abs_y, 30393, 32767, 150, 255)
+            # print(f"setSpeed: {speed}")
+            Movement.right_wheel.setSpeed(speed)
+            Movement.left_wheel.setSpeed(speed)
+            
+        elif value[0] > 16000 and abs(value[1]) < 15000:
+            Movement.right()
+            
+            if abs_x < 30393:
+                speed = mapping(abs_x, 16000, 30392, 100, 200)
+            else:
+                speed = mapping(abs_x, 30393, 32767, 200, 255)
+            # print(f"setSpeed: {speed}")
+            Movement.right_wheel.setSpeed(speed)
+            Movement.left_wheel.setSpeed(speed)
+        
+        elif value[0] < -16000 and abs(value[1]) < 15000:
+            Movement.left()
+            
+            if abs_x < 30393:
+                speed = mapping(abs_x, 16000, 30392, 100, 200)
+            else:
+                speed = mapping(abs_x, 30393, 32767, 200, 255)
+            # print(f"setSpeed: {speed}")
+            Movement.right_wheel.setSpeed(speed)
+            Movement.left_wheel.setSpeed(speed)
+
+        else:
+            Movement.stop()
+        
+        Movement.button_last_state = value[2]
+    
+    @Joystick.when_axis_right_change_wrapper
+    def joytick_axis_right_update(value, *args, **kwargs):
+        abs_x, abs_y = abs(value[0]), abs(value[1])
+        
+        if abs_x < 500 and abs_y < 500:
+            return
+        
+        if abs(value[0]) < 15000 and value[1] > 16000:
+            Movement.forward()
+            
+            # print(abs(value[1]))
+            if abs_y < 30393:
+                speed = mapping(abs_y, 16000, 30392, 40, 60)
+            else:
+                speed = mapping(abs_y, 30393, 32767, 60, 80)
+            # print(f"setSpeed: {speed}")
+            Movement.right_wheel.setSpeed(speed)
+            Movement.left_wheel.setSpeed(speed)
+        
+        elif abs(value[0]) < 15000 and value[1] < -16000:
+            Movement.backward()
+            
+            if abs_y < 30393:
+                speed = mapping(abs_y, 16000, 30392, 40, 60)
+            else:
+                speed = mapping(abs_y, 30393, 32767, 60, 80)
+            # print(f"setSpeed: {speed}")
+            Movement.right_wheel.setSpeed(speed)
+            Movement.left_wheel.setSpeed(speed)
+            
+        elif value[0] > 16000 and abs(value[1]) < 15000:
+            Movement.right()
+            
+            if abs_x < 30393:
+                speed = mapping(abs_x, 16000, 30392, 50, 100)
+            else:
+                speed = mapping(abs_x, 30393, 32767, 100, 220)
+            # print(f"setSpeed: {speed}")
+            Movement.right_wheel.setSpeed(speed)
+            Movement.left_wheel.setSpeed(speed)
+        
+        elif value[0] < -16000 and abs(value[1]) < 15000:
+            Movement.left()
+            
+            if abs_x < 30393:
+                speed = mapping(abs_x, 16000, 30392, 50, 100)
+            else:
+                speed = mapping(abs_x, 30393, 32767, 100, 220)
+            # print(f"setSpeed: {speed}")
+            Movement.right_wheel.setSpeed(speed)
+            Movement.left_wheel.setSpeed(speed)
+
+        else:
+            Movement.stop()
     
     @staticmethod
     def forward():
         if Movement.state == 'forward':
             return
-        print('forward')
-        Movement.left_wheel.forward()
-        Movement.right_wheel.forward()
+        print('movement: forward')
+        Movement.left_wheel.forward(inverse=Movement.inverse)
+        Movement.right_wheel.forward(inverse=Movement.inverse)
         Movement.state = 'forward'
     
     @staticmethod
     def backward():
         if Movement.state == 'backward':
             return
-        print('backward')
-        Movement.left_wheel.backward()
-        Movement.right_wheel.backward()
+        print('movement: backward')
+        Movement.left_wheel.backward(inverse=Movement.inverse)
+        Movement.right_wheel.backward(inverse=Movement.inverse)
         Movement.state = 'backward'
     
     @staticmethod
     def right():
         if Movement.state == 'right':
             return
-        print('right')
+        print('movement: right')
         Movement.left_wheel.forward()
         Movement.right_wheel.backward()
         Movement.state = 'right'
@@ -38,7 +158,7 @@ class Movement:
     def left():
         if Movement.state == 'left':
             return
-        print('left')
+        print('movement: left')
         Movement.left_wheel.backward()
         Movement.right_wheel.forward()
         Movement.state = 'left'
@@ -47,14 +167,13 @@ class Movement:
     def stop():
         if Movement.state == 'stop':
             return
-        print('stop')
+        print('movement: stop')
         Movement.left_wheel.stop()
         Movement.right_wheel.stop()
         Movement.state = 'stop'
     
     @staticmethod
-    def execute(direction, soft=False):
-        print("movement:", direction)
+    def execute(direction):
         if direction == 'forward':
             Movement.forward()
 

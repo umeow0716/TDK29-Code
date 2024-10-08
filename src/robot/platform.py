@@ -1,39 +1,32 @@
 from .arduino.arduino_motor import ArduinoMotor 
+from ..joystick.joystick import Joystick
 
 class Platform:
-    motor = ArduinoMotor(26, 27, 5)
-    state = 'stop'
+    motor = ArduinoMotor(29, 28, 5)
     
-    @staticmethod
-    def up():
-        if Platform.state == 'up':
-            return
-        Platform.motor.forward()
-        Platform.state = 'up'
-    
-    @staticmethod
-    def down():
-        if Platform.state == 'down':
-            return
-        Platform.motor.backward()
-        Platform.state = 'down'
-    
-    @staticmethod
-    def stop():
-        if Platform.state == 'stop':
-            return
-        Platform.motor.stop()
-        Platform.state = 'stop'
+    @Joystick.when_button_x_change_wrapper
+    def joystick_button_x_update(value, *args, **kwatgs):
+        if value:
+            Platform.motor.forward()
+        else:
+            Platform.motor.stop()
+            
+    @Joystick.when_button_a_change_wrapper
+    def joystick_button_a_update(value, *args, **kwargs):
+        if value:
+            Platform.motor.backward()
+        else:
+            Platform.motor.stop()
     
     @staticmethod
     def execute(data):
         print(f'platform: {data}')
         
         if data == 'up':
-            Platform.up()
+            Platform.motor.forward()
         
         if data == 'down':
-            Platform.down()
+            Platform.motor.backward()
         
         if data == 'stop':
-            Platform.stop()
+            Platform.motor.stop()

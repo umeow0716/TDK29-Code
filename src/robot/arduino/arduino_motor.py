@@ -10,13 +10,13 @@ class ArduinoMotor:
         Arduino.analogWrite(self.pwm_pin, default_speed)
         self.stop()
     
-    def forward(self):
-        Arduino.digitalWrite(self.forward_pin, 1)
-        Arduino.digitalWrite(self.backward_pin, 0)
+    def forward(self, inverse=False):
+        Arduino.digitalWrite(self.forward_pin, 1 if not inverse else 0)
+        Arduino.digitalWrite(self.backward_pin, 0 if not inverse else 1)
     
-    def backward(self):
-        Arduino.digitalWrite(self.forward_pin, 0)
-        Arduino.digitalWrite(self.backward_pin, 1)
+    def backward(self, inverse=False):
+        Arduino.digitalWrite(self.forward_pin, 0 if not inverse else 1)
+        Arduino.digitalWrite(self.backward_pin, 1 if not inverse else 0)
         
     def stop(self):
         Arduino.digitalWrite(self.forward_pin, 0)
