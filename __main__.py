@@ -23,7 +23,5 @@ if __name__ == '__main__':
     
     WebSocketServer.start_thread()
     
-    Thread(target=ArduinoLight.refresh, daemon=True).start()
-    
     while True:
         keep_alive()

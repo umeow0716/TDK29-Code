@@ -32,10 +32,10 @@ class ArduinoLight:
     
     @staticmethod
     def show():
-        Thread(target=ArduinoLight._refresh_thread, daemon=True).start()
+        Thread(target=ArduinoLight._show_thread, daemon=True).start()
     
     @staticmethod
-    def _refresh_thread(tick=120):
+    def _show_thread(tick=120):
         while True:
             for lightNumber in range(4):
                 for lightIndex in range(15):
