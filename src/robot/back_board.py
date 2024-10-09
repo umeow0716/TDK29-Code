@@ -2,7 +2,7 @@ from .arduino.arduino_motor import ArduinoMotor
 from ..joystick.joystick import Joystick
 
 class BackBoard:
-    motor = ArduinoMotor(32, 33, 4)
+    motor = ArduinoMotor(4, 32, 33)
     
     @Joystick.when_rb_change_wrapper
     def joystick_rb_update(value, *args, **kwargs):

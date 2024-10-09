@@ -2,7 +2,7 @@ from .arduino.arduino_motor import ArduinoMotor
 from ..joystick.joystick import Joystick
 
 class Platform:
-    motor = ArduinoMotor(29, 28, 5)
+    motor = ArduinoMotor(5, 29, 28)
     
     @Joystick.when_button_x_change_wrapper
     def joystick_button_x_update(value, *args, **kwatgs):

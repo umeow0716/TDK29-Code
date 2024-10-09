@@ -2,7 +2,7 @@ from .arduino.arduino_motor import ArduinoMotor
 from ..joystick.joystick import Joystick
 
 class CatchBall:
-    motor = ArduinoMotor(27, 26, 7)
+    motor = ArduinoMotor(7, 27, 26)
     
     @Joystick.when_button_y_change_wrapper
     def joystick_button_y_update(value, *args, **kwargs):

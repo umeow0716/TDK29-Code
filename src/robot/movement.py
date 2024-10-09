@@ -3,8 +3,8 @@ from ..joystick.joystick import Joystick
 from ..utils import mapping
 
 class Movement:
-    right_wheel = ArduinoMotor(24, 25, 2)
-    left_wheel = ArduinoMotor(22, 23, 3)
+    right_wheel = ArduinoMotor(2, 24, 25)
+    left_wheel = ArduinoMotor(3, 22, 23)
     
     state = 'stop'
     
