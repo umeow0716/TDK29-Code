@@ -1,7 +1,7 @@
 from .arduino import Arduino
 
 class ArduinoMotor:
-    def __init__(self, forward_pin, backward_pin, pwm_pin, default_speed=255):
+    def __init__(self, pwm_pin, forward_pin, backward_pin, default_speed=255):
         self.forward_pin = forward_pin
         self.backward_pin = backward_pin
         self.pwm_pin = pwm_pin

@@ -7,7 +7,7 @@ from threading import Thread
 def safety_func_wrapper(func):
     def executor(*args, **kwargs):
         try:
-            Thread(target=func, args=args, kwargs=kwargs, daemon=True).run()
+            Thread(target=func, args=args, kwargs=kwargs, daemon=True).start()
         except Exception as err:
             print(err)
     return executor
@@ -121,12 +121,10 @@ class Joystick:
     
     @staticmethod
     def start_thread():
-        thread = Thread(target=Joystick._thread_job)
-        thread.setDaemon(True)
+        thread = Thread(target=Joystick._thread_job, daemon=True)
         thread.start()
         
-        proc = Thread(target=Joystick._process_job)
-        proc.setDaemon(True)
+        proc = Thread(target=Joystick._process_job, daemon=True)
         proc.start()
         
     @staticmethod

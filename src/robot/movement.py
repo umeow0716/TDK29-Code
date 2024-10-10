@@ -1,10 +1,11 @@
+from .arduino.arduino_light import ArduinoLight
 from .arduino.arduino_motor import ArduinoMotor
 from ..joystick.joystick import Joystick
 from ..utils import mapping
 
 class Movement:
-    right_wheel = ArduinoMotor(2, 24, 25)
-    left_wheel = ArduinoMotor(3, 22, 23)
+    right_wheel = ArduinoMotor(pwm_pin=2, forward_pin=24, backward_pin=25)
+    left_wheel = ArduinoMotor(pwm_pin=3, forward_pin=22, backward_pin=23)
     
     state = 'stop'
     
@@ -16,6 +17,13 @@ class Movement:
         # print(value)
         if value[2] and value[2] != Movement.button_last_state:
             Movement.inverse = not Movement.inverse
+        
+        # if Movement.inverse:
+        #     ArduinoLight.fill(0, 255, 0, 0, True)
+        #     ArduinoLight.fill(1, 0, 255, 0, True)
+        # else:
+        #     ArduinoLight.fill(0, 0, 255, 0, True)
+        #     ArduinoLight.fill(1, 255, 0, 0, True)
         
         abs_x, abs_y = abs(value[0]), abs(value[1])
           
@@ -108,7 +116,7 @@ class Movement:
             if abs_x < 30393:
                 speed = mapping(abs_x, 16000, 30392, 50, 100)
             else:
-                speed = mapping(abs_x, 30393, 32767, 100, 220)
+                speed = mapping(abs_x, 30393, 32767, 100, 180)
             # print(f"setSpeed: {speed}")
             Movement.right_wheel.setSpeed(speed)
             Movement.left_wheel.setSpeed(speed)
@@ -119,7 +127,7 @@ class Movement:
             if abs_x < 30393:
                 speed = mapping(abs_x, 16000, 30392, 50, 100)
             else:
-                speed = mapping(abs_x, 30393, 32767, 100, 220)
+                speed = mapping(abs_x, 30393, 32767, 100, 180)
             # print(f"setSpeed: {speed}")
             Movement.right_wheel.setSpeed(speed)
             Movement.left_wheel.setSpeed(speed)
