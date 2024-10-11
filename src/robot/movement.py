@@ -1,3 +1,5 @@
+from time import sleep
+from .arduino.arduino import Arduino
 from .arduino.arduino_motor import ArduinoMotor
 from ..joystick.joystick import Joystick
 from ..utils import mapping
@@ -11,9 +13,43 @@ class Movement:
     button_last_state = 0
     inverse = False
     
+    def brightness_circle():
+        while True:
+            for birghtness in range(0, 256, 15):
+                if not Movement.inverse:
+                    Arduino.analogWrite(8, 255)
+                    Arduino.analogWrite(9, birghtness)
+                    Arduino.analogWrite(10, 255)
+                    Arduino.analogWrite(11, birghtness)
+                    Arduino.analogWrite(12, 255)
+                    Arduino.analogWrite(13, 255)
+                else:
+                    Arduino.analogWrite(8, birghtness)
+                    Arduino.analogWrite(9, 255)
+                    Arduino.analogWrite(10, 255)
+                    Arduino.analogWrite(11, 255)
+                    Arduino.analogWrite(12, birghtness)
+                    Arduino.analogWrite(13, 255)
+                sleep(0.1)
+            for birghtness in range(0, 256, 15)[::-1]:
+                if not Movement.inverse:
+                    Arduino.analogWrite(8, 255)
+                    Arduino.analogWrite(9, birghtness)
+                    Arduino.analogWrite(10, 255)
+                    Arduino.analogWrite(11, birghtness)
+                    Arduino.analogWrite(12, 255)
+                    Arduino.analogWrite(13, 255)
+                else:
+                    Arduino.analogWrite(8, birghtness)
+                    Arduino.analogWrite(9, 255)
+                    Arduino.analogWrite(10, 255)
+                    Arduino.analogWrite(11, 255)
+                    Arduino.analogWrite(12, birghtness)
+                    Arduino.analogWrite(13, 255)
+                sleep(0.1)
+    
     @Joystick.when_axis_left_change_wrapper
     def joystick_axis_left_update(value, *args, **kwargs):    
-        # print(value)
         if value[2] and value[2] != Movement.button_last_state:
             Movement.inverse = not Movement.inverse
         

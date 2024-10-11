@@ -1,66 +1,51 @@
-from random import randrange
-from threading import Thread
-from time import sleep
-from src.robot.raspberry.light import Light
+# from rpi_ws281x import *
 
-def keep_alive():
-    sleep(1000000)
-    
-def random_color():
-    return (randrange(256), randrange(256), randrange(256))
+# avaiable_pin = []
 
-def brightness_circle(light_number):
-    length = Light.get_light_length(light_number)
-    while True:
-        for brightness in range(0, 100, 1):
-            for i in range(length):
-                Light.set_light_brightness(light_number, i, brightness * 0.01)
-            sleep(0.01)
-        for brightness in range(0, 100, 1)[::-1]:
-            for i in range(length):
-                Light.set_light_brightness(light_number, i, brightness * 0.01)
-            sleep(0.01)
-    
-def star_light(light_number):
-    length = Light.get_light_length(light_number)
-    while True:
-        for i in range(2, length+3):
-            Light.set_light_color(light_number, i-3, 0, 0, 0)
-            
-            if Light.is_black(light_number, i-2):
-                Light.set_light_color(light_number, i-2, *random_color())
-            
-            if Light.is_black(light_number, i-1):
-                Light.set_light_color(light_number, i-1, *random_color())
-            
-            Light.set_light_color(light_number, i, *random_color())
-            sleep(0.15)
+# for n in range(1, 26):
+#     try:
+#         Adafruit_NeoPixel(14, n).begin()
+#         avaiable_pin.append(f"{n} 0")
+#         continue
+#     except:
+#         pass
+#     try:
+#         Adafruit_NeoPixel(14, n, channel=1).begin()
+#         avaiable_pin.append(f"{n} 1")
+#         continue
+#     except:
+#         pass
 
-def star_light_reverse(light_number):
-    length = Light.get_light_length(light_number)
-    while True:
-        for i in range(-3, length)[::-1]:
-            Light.set_light_color(light_number, i+3, 0, 0, 0)
-            
-            if Light.is_black(light_number, i+2):
-                Light.set_light_color(light_number, i+2, *random_color())
-            
-            if Light.is_black(light_number, i+1):
-                Light.set_light_color(light_number, i+1, *random_color())
-            
-            Light.set_light_color(light_number, i, *random_color())
-            sleep(0.15)
+# print(avaiable_pin)
 
-if __name__ == '__main__':  
-    Light.begin()  
-    # Light.fill(0, 255, 255, 255)
-    # Light.fill(1, 255, 0, 0)
-    
-    # Thread(target=brightness_circle, args=(0,), daemon=True).start()
-    # Thread(target=brightness_circle, args=(1,), daemon=True).start()
-    Thread(target=star_light_reverse, args=(0,), daemon=True).start()
-    # Thread(target=star_light_reverse, args=(3,), daemon=True).start()
-    
-    
-    while True:
-        keep_alive()
+# strip = Adafruit_NeoPixel(14, 26)
+# strip.begin()
+
+# try:
+#     strip.setPixelColorRGB(0, 255, 0, 0)
+#     strip.show()
+# except Exception as err:
+#     print(err)
+#     pass
+
+import board
+import neopixel
+
+from adafruit_blinka.microcontroller.bcm283x.pin import Pin
+
+light1 = neopixel.NeoPixel(Pin(21), 14, brightness=1, auto_write=False, pixel_order=neopixel.RGB)
+light2 = neopixel.NeoPixel(Pin(18), 14, brightness=1, auto_write=False, pixel_order=neopixel.RGB)
+light3 = neopixel.NeoPixel(Pin(12), 14, brightness=1, auto_write=False, pixel_order=neopixel.RGB)
+# light4 = neopixel.NeoPixel(Pin(18), 14, brightness=1, auto_write=False, pixel_order=neopixel.RGB)
+
+light1.fill((255, 0, 0))
+light1.show()
+
+light2.fill((0, 255, 0))
+light2.show()
+
+light3.fill((0, 0, 255))
+light3.show()
+
+# light4.fill((255, 255, 0))
+# light4.show()

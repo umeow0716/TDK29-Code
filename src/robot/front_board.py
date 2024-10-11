@@ -2,7 +2,7 @@ from .arduino.arduino_motor import ArduinoMotor
 from ..joystick.joystick import Joystick
 
 class FrontBoard:
-    motor = ArduinoMotor(4, 46, 47)
+    motor = ArduinoMotor(4, 47, 46)
     
     @Joystick.when_lb_change_wrapper
     def joystick_lb_update(value, *args, **kwargs):

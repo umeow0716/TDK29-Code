@@ -4,6 +4,8 @@ from time import sleep
 from os.path import exists
 from threading import Thread
 
+from ..robot.raspberry.light import Light
+
 def safety_func_wrapper(func):
     def executor(*args, **kwargs):
         try:
@@ -169,6 +171,7 @@ class Joystick:
             
                 for event in Joystick.dev.read_loop():
                     # print(event)
+                    Light.robot_noafk()
                     if event.type == 0:
                         pass
                     
