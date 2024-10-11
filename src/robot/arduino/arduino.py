@@ -49,24 +49,24 @@ class Arduino:
         packet = buffer.to_bytes(2)
         Arduino.ser.write(packet)
 
-    @staticmethod
-    def setColor(light_number: int, light_index: int, red=0, green=0, blue=0): # mode: 2
-        return
-        # print(red, green, blue)
-        # packet - m: mode n: lightNumber i:lightIndex r: Red g: Green b: Blue u: Need Update 
-        # mmnniiii rrrrrrrr gggggggg bbbbbbbb
-        buffer = (0x02 << 30)
+    # @staticmethod
+    # def setColor(light_number: int, light_index: int, red=0, green=0, blue=0): # mode: 2
+    #     return
+    #     # print(red, green, blue)
+    #     # packet - m: mode n: lightNumber i:lightIndex r: Red g: Green b: Blue u: Need Update 
+    #     # mmnniiii rrrrrrrr gggggggg bbbbbbbb
+    #     buffer = (0x02 << 30)
         
-        buffer = buffer | (light_number << 28)
+    #     buffer = buffer | (light_number << 28)
         
-        buffer = buffer | (light_index << 24)
+    #     buffer = buffer | (light_index << 24)
         
-        buffer = buffer | (red << 16)
-        buffer = buffer | (green << 8)
-        buffer = buffer | blue
+    #     buffer = buffer | (red << 16)
+    #     buffer = buffer | (green << 8)
+    #     buffer = buffer | blue
         
-        packet = buffer.to_bytes(4)
-        Arduino.ser.write(packet)
+    #     packet = buffer.to_bytes(4)
+    #     Arduino.ser.write(packet)
         
     @staticmethod
     def show():

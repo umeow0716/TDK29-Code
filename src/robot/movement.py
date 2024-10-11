@@ -1,4 +1,3 @@
-from .arduino.arduino_light import ArduinoLight
 from .arduino.arduino_motor import ArduinoMotor
 from ..joystick.joystick import Joystick
 from ..utils import mapping

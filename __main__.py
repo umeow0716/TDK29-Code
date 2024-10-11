@@ -7,7 +7,7 @@ from src.websocket.websocket_server import WebSocketServer
 
 from src.robot.command_parser import CommandParser
 from src.robot.arduino.arduino import Arduino
-from src.robot.arduino.arduino_light import ArduinoLight
+from src.robot.raspberry.light import Light
 
 # @Joystick.when_button_a_change_wrapper
 # def f(value, *args, **kwargs):
@@ -23,53 +23,47 @@ def keep_alive():
 def random_color():
     return (randrange(256), randrange(256), randrange(256))
 
-def brightness_circle(lightNumber):
-    length = len(ArduinoLight.light_color_list[lightNumber])
+def brightness_circle(light_number):
+    length = Light.get_light_length(light_number)
     while True:
         for brightness in range(0, 100, 5):
             for i in range(length):
-                ArduinoLight.setLightBrightness(lightNumber, i, brightness * 0.01)
+                Light.set_light_brightness(light_number, i, brightness * 0.01)
             sleep(0.5)
         for brightness in range(0, 100, 5)[::-1]:
             for i in range(length):
-                ArduinoLight.setLightBrightness(lightNumber, i, brightness * 0.01)
+                Light.set_light_brightness(light_number, i, brightness * 0.01)
             sleep(0.5)
     
-def star_light(lightNumber):
-    length = len(ArduinoLight.light_color_list[lightNumber])
+def star_light(light_number):
+    length = Light.get_light_length(light_number)
     while True:
         for i in range(2, length+3):
-            ArduinoLight.setLightColor(lightNumber, i-3, 0, 0, 0)
+            Light.set_light_color(light_number, i-3, 0, 0, 0)
             
-            if ArduinoLight.isBlack(lightNumber, i-2):
-                ArduinoLight.setLightColor(lightNumber, i-2, *random_color())
+            if Light.is_black(light_number, i-2):
+                Light.set_light_color(light_number, i-2, *random_color())
             
-            if ArduinoLight.isBlack(lightNumber, i-1):
-                ArduinoLight.setLightColor(lightNumber, i-1, *random_color())
+            if Light.is_black(light_number, i-1):
+                Light.set_light_color(light_number, i-1, *random_color())
             
-            ArduinoLight.setLightColor(lightNumber, i, *random_color())
+            Light.set_light_color(light_number, i, *random_color())
             sleep(0.15)
 
-def star_light_reverse(lightNumber):
-    length = len(ArduinoLight.light_color_list[lightNumber])
+def star_light_reverse(light_number):
+    length = Light.get_light_length(light_number)
     while True:
         for i in range(-3, length)[::-1]:
-            ArduinoLight.setLightColor(lightNumber, i+3, 0, 0, 0)
+            Light.set_light_color(light_number, i+3, 0, 0, 0)
             
-            if ArduinoLight.isBlack(lightNumber, i+2):
-                ArduinoLight.setLightColor(lightNumber, i+2, *random_color())
+            if Light.is_black(light_number, i+2):
+                Light.set_light_color(light_number, i+2, *random_color())
             
-            if ArduinoLight.isBlack(lightNumber, i+1):
-                ArduinoLight.setLightColor(lightNumber, i+1, *random_color())
+            if Light.is_black(light_number, i+1):
+                Light.set_light_color(light_number, i+1, *random_color())
             
-            ArduinoLight.setLightColor(lightNumber, i, *random_color())
+            Light.set_light_color(light_number, i, *random_color())
             sleep(0.15)
-
-def refresh_light():
-    while True:
-        ArduinoLight.show()
-        sleep(0.2)
-    
 
 if __name__ == '__main__':
     Joystick.start_thread()
@@ -80,17 +74,14 @@ if __name__ == '__main__':
     
     sleep(0.8)
     
-    # ArduinoLight.fill(0, 0, 255, 0)
-    # ArduinoLight.fill(1, 255, 0, 0)
+    Light.fill(0, 0, 255, 0)
+    Light.fill(1, 255, 0, 0)
     
-    # Thread(target=refresh_light, daemon=True).start()
-    # Thread(target=ArduinoLight.refresh, daemon=True).start()
-    
-    # Thread(target=brightness_circle, args=(0,), daemon=True).start()
-    # Thread(target=brightness_circle, args=(1,), daemon=True).start()
-    # Thread(target=star_light_reverse, args=(2,), daemon=True).start()
-    # sleep(1)
-    # Thread(target=star_light_reverse, args=(3,), daemon=True).start()
+    Thread(target=brightness_circle, args=(0,), daemon=True).start()
+    Thread(target=brightness_circle, args=(1,), daemon=True).start()
+    Thread(target=star_light_reverse, args=(2,), daemon=True).start()
+    sleep(1)
+    Thread(target=star_light_reverse, args=(3,), daemon=True).start()
     
     
     while True:
