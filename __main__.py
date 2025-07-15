@@ -1,13 +1,9 @@
 from threading import Thread
 from time import sleep
 
-from src.robot.movement import Movement
 from src.joystick.joystick import Joystick
-from src.websocket.websocket_server import WebSocketServer
 
-from src.robot.command_parser import CommandParser
 from src.robot.arduino.arduino import Arduino
-from src.robot.raspberry.light import Light
 
 # @Joystick.when_button_a_change_wrapper
 # def f(value, *args, **kwargs):
@@ -23,17 +19,9 @@ def keep_alive():
 if __name__ == '__main__':
     Joystick.start_thread()
     
-    WebSocketServer.start_thread()
-    
     Thread(target=Arduino.listening, daemon=True).start()
     
     sleep(0.8)
-    
-    Light.begin()
-    
-    Thread(target=Light.robot, daemon=True).start()
-    
-    Thread(target=Movement.brightness_circle, daemon=True).start()
     
     while True:
         keep_alive()

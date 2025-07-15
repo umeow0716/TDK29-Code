@@ -4,9 +4,7 @@ import serial
 def getTTYName():
     filelist = os.listdir('/dev')
     for filename in filelist:
-        if filename.startswith('ttyUSB'):
-            return f'/dev/{filename}'
-        if filename.startswith('ttyACM'):
+        if filename.startswith('ttyAMA'):
             return f'/dev/{filename}'
 
 class Arduino:
